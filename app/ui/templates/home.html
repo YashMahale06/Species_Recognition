@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Video</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-image: url("{{ url_for('static', filename='images.jpg') }}"); /* Adjust the path as needed */
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .upload-form {
+            background-color: rgba(255, 255, 255, 0.7); /* Adjust the opacity as needed */
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .upload-input input[type="file"] {
+            display: none;
+        }
+
+        .upload-input label {
+            cursor: pointer;
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="upload-form">
+        <h1>Upload Video</h1>
+        <form action="/upload_video" method="post" enctype="multipart/form-data" class="upload-input">
+            <label for="video_file">Choose a video file:</label>
+            <input type="file" id="video_file" name="video_file" accept="video/*">
+            <br>
+            <input type="submit" value="Upload">
+        </form>
+    </div>
+</body>
+
+</html>

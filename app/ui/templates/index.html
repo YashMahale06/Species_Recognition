@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bird Species Recognition App</title>
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: Arial, sans-serif;
+        overflow-y: hidden;
+        background-color: #333;
+      }
+
+      #navbar {
+        width: 100%;
+        background-color: #000000;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      #navbar-text {
+        color: white;
+      }
+
+      #main-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        height: 100%;
+        padding: 8px;
+      }
+
+      #left-container,
+      #right-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 8px;
+        margin: 12px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(6, 6, 6, 0.1);
+        background-color: #545454;
+      }
+
+      h1 {
+        font-size: 36px;
+        text-align: center;
+        color: rgb(255, 255, 255);
+      }
+
+      form {
+        margin-top: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 2px white dashed;
+        padding: 40px;
+      }
+
+      .custom-file-upload {
+        padding: 10px 100px;
+        font-size: 60px;
+        color: white;
+        /* background-color: #ff6200; */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: inline-block;
+      }
+
+      input[type="file"] {
+        display: none;
+      }
+
+      /* label {
+        cursor: pointer;
+        font-size: 18px;
+        color: #333;
+        margin-bottom: 10px;
+      } */
+
+      #upload_button {
+        padding: 10px 20px;
+        font-size: 18px;
+        color: white;
+        width: 100%;
+        margin-top: 20px;
+        background-color: #ff6200;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      #predictSpecies {
+        padding: 10px 20px;
+        font-size: 18px;
+        color: white;
+        width: 50%;
+        margin-top: 20px;
+        background-color: #ff6200;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      #predictSpecies.hidden {
+        display: none;
+      }
+
+      #prediction_result {
+        margin-top: 20px;
+        font-size: 18px;
+        color: rgb(211, 211, 211);
+        font: bold;
+      }
+
+      .container {
+        height: 100vh;
+        width: 100%;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        background-color: #fcfcfc;
+      }
+
+      .card {
+        border-radius: 10px;
+        box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
+        width: 600px;
+        height: 260px;
+        background-color: #ffffff;
+        padding: 10px 30px 40px;
+      }
+
+      .card h3 {
+        font-size: 22px;
+        font-weight: 600;
+      }
+
+      .drop_box {
+        margin: 10px 0;
+        padding: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        border: 3px dotted #a3a3a3;
+        border-radius: 5px;
+      }
+
+      .drop_box h4 {
+        font-size: 16px;
+        font-weight: 400;
+        color: #2e2e2e;
+      }
+
+      .drop_box p {
+        margin-top: 10px;
+        margin-bottom: 20px;
+        font-size: 12px;
+        color: #a3a3a3;
+      }
+
+      .btn {
+        text-decoration: none;
+        background-color: #005af0;
+        color: #ffffff;
+        padding: 10px 20px;
+        border: none;
+        outline: none;
+        transition: 0.3s;
+      }
+
+      .btn:hover {
+        text-decoration: none;
+        background-color: #ffffff;
+        color: #005af0;
+        padding: 10px 20px;
+        border: none;
+        outline: 1px solid #010101;
+      }
+      .form input {
+        margin: 10px 0;
+        width: 100%;
+        background-color: #e2e2e2;
+        border: none;
+        outline: none;
+        padding: 12px 20px;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="navbar">
+      <h1 id="navbar-text">Bird Species Recognition</h1>
+    </div>
+    <div id="main-container">
+      <div id="left-container">
+        <h1>Upload Video</h1>
+        <div id="left-content">
+          <form
+            action="/upload_video"
+            method="post"
+            enctype="multipart/form-data"
+          >
+            <input type="file" id="video_file" name="video_file" required />
+
+            <label for="video_file" class="custom-file-upload">📤</label>
+            <span id="file_name"></span>
+            <!-- <label for="video_file" class="custom-file-upload-label" data-file-name="Choose File">
+              <span>Choose File</span>
+            </label>
+            <input type="file" id="video_file" name="video_file" required data-file-name="" onchange="this.setAttribute('data-file-name', this.files[0].name)" /> -->
+
+            <button id="upload_button" type="submit">Upload</button>
+          </form>
+        </div>
+      </div>
+
+      <div id="right-container">
+        <h1>Predict Species</h1>
+        <button id="predictSpecies" class="predictSpecies">Predict</button>
+        <div id="prediction_result" class="prediction_result hidden">
+          <h2>Prediction Result:</h2>
+          <ul style="list-style-type: none; padding: 0">
+            <li>
+              <strong>Species:</strong> <span id="predicted_species"></span>
+            </li>
+            <li>
+              <strong>Probability:</strong>
+              <span id="predicted_probability"></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- <img src="path_to_your_image.jpg" alt="Bird Image" id="bird_image" /> -->
+    </div>
+
+    <script>
+      document
+        .getElementById("predictSpecies")
+        .addEventListener("click", function () {
+          // Fetch predictions for both image and audio
+          Promise.allSettled([
+            fetch("/predict_species").then((response) => response.json()),
+            fetch("/predict_species_audio").then((response) => response.json()),
+          ])
+            .then((results) => {
+              let speciesFromImages = null;
+              let speciesFromAudio = null;
+
+              // Check if both requests succeeded
+              if (results[0].status === "fulfilled") {
+                speciesFromImages = results[0].value;
+              }
+              if (results[1].status === "fulfilled") {
+                speciesFromAudio = results[1].value;
+              }
+
+              console.log("Species from images:", speciesFromImages);
+              console.log("Species from audio:", speciesFromAudio);
+
+              // Display the output
+              if (
+                speciesFromImages &&
+                speciesFromAudio &&
+                speciesFromImages.predicted_species ===
+                  speciesFromAudio.predicted_species
+              ) {
+                // Display the output from any one of them
+                document.getElementById("predicted_species").textContent =
+                  speciesFromImages.predicted_species;
+                document.getElementById(
+                  "predicted_probability"
+                ).textContent = `${speciesFromImages.probabilites.toFixed(4)}`;
+              } else if (speciesFromImages) {
+                // Display the output from images if available
+                document.getElementById("predicted_species").textContent =
+                  speciesFromImages.predicted_species;
+                document.getElementById(
+                  "predicted_probability"
+                ).textContent = `${speciesFromImages.probabilites.toFixed(4)}`;
+              } else if (speciesFromAudio) {
+                // Display the output from audio if available
+                document.getElementById("predicted_species").textContent =
+                  speciesFromAudio.predicted_species;
+                document.getElementById(
+                  "predicted_probability"
+                ).textContent = `${speciesFromImages.probabilites.toFixed(4)}`;
+              } else {
+                // Display an error message
+                document.getElementById("prediction_result").textContent =
+                  "Both predictions failed.";
+              }
+
+              // Hide the predict button
+              document.getElementById("predictSpecies").classList.add("hidden");
+              document
+                .getElementById("prediction_result")
+                .classList.remove("hidden");
+
+              fetch("/get_second_image")
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data.image_url) {
+                    const img = document.createElement("img");
+                    img.src = data.image_url;
+                    img.alt = "Bird Image";
+                    img.id = "bird_image";
+
+                    // Insert the image above the "Predict Species" heading
+                    document
+                      .getElementById("right-container")
+                      .insertBefore(
+                        img,
+                        document.getElementById("predictSpecies")
+                      );
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error fetching second image URL:", error);
+                });
+            })
+            .catch((error) => {
+              console.error("Error fetching predictions:", error);
+            });
+        });
+
+      const fileInput = document.getElementById("video_file");
+
+      // Get the span element to display the file name
+      const fileNameSpan = document.getElementById("file_name");
+
+      // Update the span element with the chosen file name
+      fileInput.addEventListener("change", function () {
+        fileNameSpan.textContent = fileInput.files[0].name;
+      });
+    </script>
+  </body>
+</html>
